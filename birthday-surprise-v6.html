@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ Something Special Awaits ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Nunito:wght@300;400;600;700&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════
+   TOKENS
+══════════════════════════ */
+:root{
+  --rose:#e8a0b4; --deep-rose:#c4607c; --lilac:#c9a8e0;
+  --peach:#ffd5b8; --blush:#fce8f0; --cream:#fff9f4;
+  --tm:#7a5a6a; --tl:#a07898; --td:#4a2a3a;
+  --ff:'Cormorant Garamond',serif;
+  --fb:'Nunito',sans-serif;
+  --fs:'Dancing Script',cursive;
+  --pill:100px; --r28:28px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);min-height:100vh;overflow-x:hidden;background:#08030f}
+
+/* ══════════════════════════
+   SCREENS
+══════════════════════════ */
+.screen{
+  display:none;min-height:100vh;width:100%;
+  position:relative;overflow:hidden;
+  align-items:center;justify-content:center;flex-direction:column;
+  padding:clamp(16px,4vw,36px);
+}
+.screen.active{display:flex}
+.screen.si{animation:sIn .75s cubic-bezier(.22,1,.36,1) both}
+.screen.so{animation:sOut .4s ease both}
+@keyframes sIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes sOut{to{opacity:0;transform:scale(.97)}}
+
+/* ══════════════════════════
+   DREAMY BACKGROUND SYSTEM
+   (shared by all screens)
+══════════════════════════ */
+/* soft gradient base — now same dreamy palette on all screens */
+body.on-code,
+body.on-cd,
+body.on-celebrate{
+  background:linear-gradient(145deg,#fde0ee,#f2e4fc,#e2e8ff,#fde8f2);
+  background-size:300% 300%;
+  animation:bgDrift 7s ease infinite;
+}
+@keyframes bgDrift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+
+/* ── fixed ambient canvas (orbs + particles) ── */
+#ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+
+.orb{
+  position:absolute;border-radius:50%;
+  filter:blur(70px);opacity:0;
+  animation:orbPulse ease-in-out infinite;
+}
+@keyframes orbPulse{
+  0%,100%{opacity:var(--o,0.18);transform:scale(1) translate(0,0)}
+  50%{opacity:calc(var(--o,0.18)*1.7);transform:scale(1.12) translate(var(--tx,12px),var(--ty,-12px))}
+}
+
+/* floating petals / sparkles */
+.petal{
+  position:absolute;
+  user-select:none;pointer-events:none;
+  animation:petalFloat linear infinite;
+  opacity:0;
+}
+@keyframes petalFloat{
+  0%  {opacity:0;transform:translateY(100vh) rotate(0deg) translateX(0px)}
+  8%  {opacity:.75}
+  92% {opacity:.45}
+  100%{opacity:0;transform:translateY(-8vh) rotate(600deg) translateX(30px)}
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 1 — SECRET CODE  (soft & dreamy)
+══════════════════════════════════════════ */
+#sc-code{z-index:1}
+
+/* large blurred halo behind card */
+.code-halo{
+  position:absolute;
+  width:min(600px,130vw);height:min(600px,130vw);
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(240,160,220,.22) 0%,
+    rgba(180,100,240,.14) 38%,
+    transparent 70%
+  );
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  animation:haloBreath 5s ease-in-out infinite;
+  pointer-events:none;z-index:0;
+}
+@keyframes haloBreath{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}
+  50%{transform:translate(-50%,-50%) scale(1.12);opacity:1}
+}
+
+/* thin glowing ring */
+.code-ring{
+  position:absolute;
+  width:min(460px,95vw);height:min(460px,95vw);
+  border-radius:50%;
+  border:1px solid rgba(220,140,255,.18);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:
+    0 0 60px rgba(200,100,255,.12),
+    inset 0 0 60px rgba(200,100,255,.06);
+  animation:ringPulse 4s ease-in-out infinite;
+  pointer-events:none;z-index:0;
+}
+.code-ring2{
+  position:absolute;
+  width:min(360px,78vw);height:min(360px,78vw);
+  border-radius:50%;
+  border:1px solid rgba(255,160,200,.12);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  animation:ringPulse 6s ease-in-out infinite reverse;
+  pointer-events:none;z-index:0;
+}
+@keyframes ringPulse{
+  0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
+}
+
+/* the actual card */
+.code-card{
+  position:relative;z-index:2;
+  width:100%;max-width:400px;
+  background:rgba(255,255,255,.07);
+  backdrop-filter:blur(32px);
+  -webkit-backdrop-filter:blur(32px);
+  border-radius:var(--r28);
+  border:1px solid rgba(255,255,255,.12);
+  padding:clamp(30px,7vw,50px) clamp(22px,6vw,42px);
+  text-align:center;
+  box-shadow:
+    0 0 0 1px rgba(220,150,255,.08),
+    0 32px 80px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.1);
+  animation:cardDrift 7s ease-in-out infinite;
+}
+@keyframes cardDrift{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-7px)}
+}
+
+/* gem icon */
+.code-gem{
+  font-size:clamp(40px,9vw,58px);
+  display:block;margin-bottom:14px;
+  filter:drop-shadow(0 0 16px rgba(220,140,255,.7)) drop-shadow(0 0 40px rgba(200,100,240,.35));
+  animation:gemSpin 4s ease-in-out infinite;
+}
+@keyframes gemSpin{
+  0%,100%{transform:rotate(-6deg) scale(1)}
+  50%{transform:rotate(6deg) scale(1.1)}
+}
+
+.code-eyebrow{
+  font-family:var(--fs);
+  font-size:clamp(13px,3vw,17px);
+  color:var(--tl);
+  margin-bottom:8px;
+  letter-spacing:.5px;
+}
+.code-title{
+  font-family:var(--ff);
+  font-size:clamp(22px,5.5vw,34px);
+  font-weight:300;font-style:italic;
+  color:var(--td);line-height:1.25;
+  margin-bottom:5px;
+  text-shadow:0 2px 30px rgba(200,120,255,.35);
+}
+.code-sub{
+  font-size:clamp(11px,2.5vw,13px);
+  color:var(--tm);
+  margin-bottom:26px;font-weight:300;
+}
+
+/* small gif row to make S1 feel more alive */
+.code-gifs{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:18px;
+}
+.code-gif{
+  width:60px;
+  height:60px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.25);
+  box-shadow:0 6px 16px rgba(0,0,0,.45);
+}
+.code-gif img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* input */
+.code-input{
+  width:100%;padding:14px 20px;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:var(--pill);
+  font-family:var(--fb);font-size:18px;font-weight:700;
+  color:var(--td);text-align:center;
+  letter-spacing:7px;outline:none;
+  transition:all .35s ease;margin-bottom:12px;
+  backdrop-filter:blur(8px);
+}
+.code-input::placeholder{color:rgba(122,90,106,.6);letter-spacing:3px;font-size:13px;font-weight:400}
+.code-input:focus{
+  border-color:rgba(210,120,255,.55);
+  background:rgba(255,255,255,.11);
+  box-shadow:0 0 0 4px rgba(180,80,240,.15),0 0 30px rgba(180,80,240,.1);
+}
+.code-input.shake{animation:shk .45s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shk{15%{transform:translateX(-5px)}35%{transform:translateX(5px)}55%{transform:translateX(-4px)}75%{transform:translateX(4px)}100%{transform:none}}
+
+/* unlock btn */
+.unlock-btn{
+  width:100%;padding:14px 24px;border:none;border-radius:var(--pill);
+  background:linear-gradient(135deg,#b050c8,#7838b8,#5060d8);
+  color:#fff;font-family:var(--fb);font-size:15px;font-weight:700;
+  letter-spacing:.4px;cursor:pointer;transition:all .35s;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 32px rgba(150,60,200,.45);
+}
+.unlock-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.16),transparent);border-radius:inherit;
+}
+.unlock-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(150,60,200,.6)}
+.unlock-btn:active{transform:translateY(0)}
+
+.err-msg{min-height:18px;font-size:12px;color:rgba(255,140,160,.8);margin-top:9px;font-weight:400}
+
+/* bottom stars */
+.code-footer{
+  margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.code-line{width:60px;height:1px;background:rgba(255,255,255,.08)}
+.code-stars{font-size:clamp(12px,2.5vw,16px);letter-spacing:9px;color:rgba(255,200,255,.28);animation:twinkle 3s ease infinite}
+@keyframes twinkle{0%,100%{opacity:.3}40%{opacity:1}70%{opacity:.4}}
+
+/* ══════════════════════════════════════════
+   SCREEN 2 — COUNTDOWN
+══════════════════════════════════════════ */
+#sc-cd{z-index:1}
+
+/* expanding circle rings */
+.cd-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(200,120,255,.1);
+  top:50%;left:50%;
+  animation:cdRingEx linear infinite;
+  pointer-events:none;
+}
+@keyframes cdRingEx{
+  0%{transform:translate(-50%,-50%) scale(.7);opacity:.5}
+  100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}
+}
+
+.cd-card{
+  position:relative;z-index:2;
+  width:100%;max-width:540px;text-align:center;
+}
+.cd-eyebrow{font-family:var(--fs);font-size:clamp(16px,4vw,22px);color:rgba(220,160,255,.65);margin-bottom:8px}
+.cd-title{
+  font-family:var(--ff);font-size:clamp(26px,6.5vw,44px);
+  font-weight:300;font-style:italic;color:var(--td);
+  line-height:1.2;margin-bottom:8px;
+  text-shadow:0 0 60px rgba(200,100,255,.3);
+}
+.cd-name-chip{
+  display:inline-block;
+  font-family:var(--fs);font-size:clamp(18px,4.5vw,26px);
+  color:var(--rose);margin-bottom:28px;
+  text-shadow:0 0 24px rgba(232,160,180,.45);
+}
+
+/* 4 tiles */
+.cd-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(8px,2vw,14px);margin-bottom:24px;
+}
+.cd-unit{
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:clamp(14px,3.5vw,22px) clamp(5px,1.5vw,10px);
+  position:relative;overflow:hidden;
+}
+.cd-unit::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,120,255,.4),transparent);
+}
+.cd-num{
+  font-family:var(--ff);font-size:clamp(30px,7.5vw,54px);
+  font-weight:600;color:var(--td);line-height:1;display:block;
+  text-shadow:0 0 30px rgba(180,100,240,.5);
+  transition:transform .15s ease;
+}
+.cd-num.bump{animation:numBump .2s ease}
+@keyframes numBump{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.cd-lbl{font-size:clamp(7px,1.8vw,10px);color:var(--tm);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-top:5px;display:block}
+
+.cd-date-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--pill);
+  padding:10px 20px;
+  font-size:clamp(10px,2.5vw,13px);
+  color:var(--tm);
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 3 — CELEBRATION
+══════════════════════════════════════════ */
+#sc-celebrate{z-index:1}
+
+/* rotating petal background */
+.cel-bg-petals{position:absolute;inset:0;pointer-events:none;z-index:0}
+.cel-bg-petal{
+  position:absolute;font-size:clamp(14px,3vw,22px);
+  animation:celPetal linear infinite;opacity:0;
+}
+@keyframes celPetal{
+  0%{opacity:0;transform:translateY(-5%) rotate(0deg)}
+  10%{opacity:.6}
+  90%{opacity:.3}
+  100%{opacity:0;transform:translateY(105vh) rotate(540deg)}
+}
+
+.cel-wrap{
+  position:relative;z-index:2;
+  width:100%;max-width:580px;text-align:center;
+}
+
+/* emoji row bouncing */
+.cel-emoji-row{
+  font-size:clamp(24px,6vw,40px);
+  letter-spacing:4px;margin-bottom:10px;
+  animation:rowBounce 1.1s ease-in-out infinite alternate;
+  display:block;
+}
+@keyframes rowBounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+
+/* HB text */
+.cel-hb-text{
+  font-family:var(--ff);font-style:italic;font-weight:300;
+  font-size:clamp(16px,4vw,24px);letter-spacing:3px;
+  background:linear-gradient(135deg,#b840a0,#7838c0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:2px;
+}
+/* big name */
+.cel-name{
+  font-family:var(--fs);
+  font-size:clamp(44px,12vw,82px);
+  background:linear-gradient(135deg,#c4607c,#9060c0,#c4607c);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:nameFlow 3.5s linear infinite;
+  display:block;line-height:1.05;margin-bottom:6px;
+  filter:drop-shadow(0 4px 20px rgba(196,96,124,.3));
+}
+@keyframes nameFlow{0%{background-position:0%}100%{background-position:200%}}
+
+/* sparkle subtitle */
+.cel-subtitle{
+  font-family:var(--fs);font-size:clamp(16px,4vw,22px);
+  color:var(--tl);margin-bottom:24px;
+}
+
+/* message card */
+.cel-msg-card{
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,200,220,.35);
+  border-radius:var(--r28);
+  padding:clamp(20px,5vw,34px) clamp(18px,5vw,32px);
+  margin-bottom:24px;
+  box-shadow:0 14px 48px rgba(200,120,160,.14);
+  position:relative;overflow:hidden;
+  text-align:left;
+}
+.cel-msg-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--rose),var(--lilac),var(--peach),var(--rose));
+  background-size:200%;animation:barFlow 3s linear infinite;
+}
+@keyframes barFlow{to{background-position:200%}}
+
+.cel-msg{font-size:clamp(13px,2.8vw,16px);color:var(--tm);line-height:1.9;font-weight:400}
+
+/* photo strip (mini gallery inline) */
+.cel-photos{
+  display:flex;gap:clamp(8px,2vw,12px);
+  margin-bottom:24px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:4px;
+  scrollbar-width:none;
+}
+.cel-photos::-webkit-scrollbar{display:none}
+.cel-photo{
+  flex:0 0 clamp(100px,28vw,150px);
+  height:clamp(100px,28vw,150px);
+  border-radius:16px;
+  overflow:hidden;
+  border:2px solid rgba(255,200,220,.4);
+  box-shadow:0 6px 20px rgba(200,120,160,.15);
+  scroll-snap-align:start;
+  transition:transform .3s ease;
+}
+.cel-photo:hover{transform:scale(1.05) rotate(1deg)}
+.cel-photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* big tilted photo pair on S3 */
+.cel-polaroid{
+  position:absolute;
+  width:300px;
+  height:300px;
+  max-width:40vw;
+  border-radius:22px;
+  overflow:hidden;
+  border:6px solid #fff;
+  box-shadow:0 16px 40px rgba(120,60,90,.35);
+  background:#fff;
+}
+.cel-polaroid img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.cel-polaroid-top-right{
+  top:30px;
+  right:8%;
+  transform:rotate(8deg);
+}
+.cel-polaroid-bottom-left{
+  bottom:40px;
+  left:8%;
+  transform:rotate(-7deg);
+}
+.cel-polaroid-caption{
+  margin-top:18px;
+  font-size:clamp(12px,2.8vw,14px);
+  color:var(--tm);
+}
+
+/* exit btn */
+.exit-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 36px;border:1.5px solid rgba(180,80,120,.2);
+  border-radius:var(--pill);
+  background:rgba(255,255,255,.65);backdrop-filter:blur(14px);
+  color:var(--td);font-family:var(--fb);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .35s;
+  box-shadow:0 6px 24px rgba(200,120,160,.15);letter-spacing:.3px;
+}
+.exit-btn:hover{
+  background:rgba(255,220,235,.8);border-color:rgba(200,100,140,.35);
+  transform:translateY(-2px);box-shadow:0 12px 32px rgba(200,120,160,.25);
+}
+
+/* ══════════════════════
+   EXIT OVERLAY
+══════════════════════ */
+.exit-ov{display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+.exit-ov.on{display:flex;animation:exitFade 2.3s ease forwards}
+@keyframes exitFade{0%{background:rgba(0,0,0,0)}35%{background:rgba(6,1,12,.96)}100%{background:#000}}
+.exit-txt{font-family:var(--fs);font-size:clamp(22px,5.5vw,36px);color:rgba(255,200,230,.9);text-align:center;padding:0 30px;line-height:1.65;animation:exitT 2.3s ease forwards}
+@keyframes exitT{0%,18%{opacity:0;transform:scale(.88)}42%,78%{opacity:1;transform:scale(1)}100%{opacity:0}}
+
+/* ══════════════════════
+   CONFETTI + FLOATERS
+══════════════════════ */
+.cf{position:fixed;pointer-events:none;z-index:9998;top:-20px;animation:cfFall linear forwards}
+@keyframes cfFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.fe{position:fixed;pointer-events:none;z-index:9980;animation:feUp linear forwards}
+@keyframes feUp{0%{opacity:0;transform:translateY(0) scale(0)}18%{opacity:1;transform:translateY(-28px) scale(1.1)}80%{opacity:.8}100%{opacity:0;transform:translateY(-120px) scale(.5)}}
+
+/* sparkle burst */
+@keyframes spOut{0%{opacity:1;transform:scale(0)}50%{opacity:1;transform:scale(1.4) translateY(-18px)}100%{opacity:0;transform:scale(.4) translateY(-50px)}}
+
+/* ══════════════════════
+   RESPONSIVE
+══════════════════════ */
+@media(max-width:380px){.cd-grid{gap:6px}.code-card{padding:26px 16px}}
+@media(max-height:620px) and (orientation:landscape){
+  .code-gem{font-size:28px;margin-bottom:8px}
+  .code-title{font-size:20px}
+  .code-card{padding:20px 28px}
+}
+</style>
+</head>
+<body class="on-code">
+
+<!-- ── fixed dreamy ambient layer ── -->
+<div id="ambient"></div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — SECRET CODE
+══════════════════════════════════════ -->
+<section class="screen active si" id="sc-code">
+  <div class="code-halo"></div>
+  <div class="code-ring"></div>
+  <div class="code-ring2"></div>
+
+  <div class="code-card">
+    <span class="code-gem">🌸</span>
+    <p class="code-eyebrow">something is waiting just for you…</p>
+    <h1 class="code-title">A little surprise<br>made just for you</h1>
+    <p class="code-sub">Whisper the secret code to unlock it ✨</p>
+
+
+
+    <input
+      class="code-input"
+      id="codeInput"
+      type="password"
+      placeholder="enter code"
+      maxlength="12"
+      autocomplete="off"
+      aria-label="Secret code"
+    />
+    <button class="unlock-btn" id="unlockBtn">✨ Open the Surprise ✨</button>
+    <p class="err-msg" id="errMsg" aria-live="polite"></p>
+
+    <div class="code-footer">
+      <div class="code-line"></div>
+      <p class="code-stars">✦ &nbsp; ✦ &nbsp; ✦</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — COUNTDOWN
+══════════════════════════════════════ -->
+<section class="screen" id="sc-cd">
+  <div id="cdRings"></div>
+  <div class="cd-card">
+    <p class="cd-eyebrow">something magical is coming…</p>
+    <h2 class="cd-title">Your surprise unlocks in</h2>
+    <span class="cd-name-chip" id="cdName"></span>
+    <div class="cd-grid">
+      <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-lbl">Days</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-lbl">Hours</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-lbl">Mins</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-lbl">Secs</span></div>
+    </div>
+    <div class="cd-date-pill">
+      <span>🗓️</span><span id="cdDateTxt">—</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — CELEBRATION
+══════════════════════════════════════ -->
+<section class="screen" id="sc-celebrate">
+  <div class="cel-bg-petals" id="celPetals"></div>
+
+  <!-- standalone tilted photos, one top-right and one bottom-left -->
+  <div class="cel-polaroid cel-polaroid-top-right">
+    <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&q=80" alt="Birthday moment 1">
+  </div>
+  <div class="cel-polaroid cel-polaroid-bottom-left">
+    <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&q=80" alt="Birthday moment 2">
+  </div>
+
+  <div class="cel-wrap">
+    <span class="cel-emoji-row">🦋</span>
+    <p class="cel-hb-text">H A P P Y &nbsp; B I R T H D A Y</p>
+    <span class="cel-name" id="celName"></span>
+    <p class="cel-subtitle" id="celSubtitle"></p>
+
+    <p class="cel-polaroid-caption">
+      Two tiny frames for a thousand little memories.
+    </p>
+
+    <div class="cel-msg-card">
+      <p class="cel-msg" id="celMsg"></p>
+    </div>
+
+    <button class="exit-btn" id="knowBtn">💌 Do you want to know, who is the bus girl? 💌</button>
+    
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 4 — MESSAGE REVEAL
+══════════════════════════════════════ -->
+<section class="screen" id="sc-message">
+  <div class="cel-bg-petals" id="celPetals2"></div>
+
+  <div class="cel-wrap">
+    <span class="cel-emoji-row">💌</span>
+    <p class="cel-hb-text">a little message </p>
+
+    <div class="cel-msg-card">
+      <p class="cel-msg" id="celMsgSecret"></p>
+    </div>
+
+    <!-- mini photo strip — filled by JS from PHOTOS array -->
+    <div class="cel-photos" id="celPhotos"></div>
+
+    <button class="exit-btn" id="exitBtn">🌸 Close this Surprise 🌸</button>
+  </div>
+</section>
+
+<!-- exit overlay -->
+<div class="exit-ov" id="exitOv">
+  <div class="exit-txt" id="exitTxt"></div>
+</div>
+
+<script>
+/* ╔══════════════════════════════════
+   ║  ✏️  EASY EDIT ZONE
+   ╚══════════════════════════════════ */
+const SECRET_CODE   = "1234";
+const BIRTHDAY_NAME = "Sneha";
+
+// Month is 0-indexed: Jan=0 … Dec=11
+const TARGET_DATE = new Date(2026, 1, 24, 0, 0, 0); // July 15 2025
+
+// Short cute subtitle under her name on celebration screen
+const CEL_SUBTITLE = "Today the world celebrates YOU! 🌟";
+
+// Main birthday message on Screen 3 (use \n\n for paragraph breaks)
+const FINAL_MSG =
+`Every single day you make the world warmer just by being in it. On your birthday, I hope you feel exactly how special and wonderful you truly are — because honestly, there's nobody else quite like you.
+
+Wishing you a year full of laughter that makes your stomach hurt, adventures you didn't plan, and moments so perfect you forget to take pictures.
+
+You deserve every bit of magic that comes your way. 🌟
+
+Happy Birthday ${BIRTHDAY_NAME} — make it the best one yet! 🎂✨`;
+
+// Extra secret message shown on Screen 4
+const SECRET_MSG =
+`There are a million tiny reasons why you’re special,
+and I keep discovering new ones every time I look at you.
+
+Thank you for being the soft place my heart loves coming back to.
+
+This is just a small way of saying:
+I’m really, really happy that you exist.`;
+
+const EXIT_MSG = `Thank you for being you, ${BIRTHDAY_NAME} 🌸\nHappy Birthday, always. ✨`;
+
+/* 📸 Photos shown in the mini strip on celebration screen
+   Replace src with your own image URLs or base64 data URIs  */
+const PHOTOS = [
+  { src:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", alt:"Memory 1" },
+  { src:"https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&q=80", alt:"Memory 2" },
+  { src:"https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80", alt:"Memory 3" },
+  { src:"https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80", alt:"Memory 4" },
+];
+/* ═════════════════════════════════ */
+
+// ── state ──
+let cdTimer = null;
+let photosScrollTimer = null;
+
+// ── ambient dreamy background ──
+function buildAmbient() {
+  const a = document.getElementById('ambient');
+
+  // soft colour orbs — visible on dark screens
+  const orbDefs = [
+    { w:520, h:520, top:'8%',  left:'58%',  bg:'#d060e0', o:.16, dur:9,  tx:'22px',  ty:'-14px' },
+    { w:420, h:420, top:'52%', left:'-6%',  bg:'#6040c8', o:.14, dur:11, tx:'-12px', ty:'18px'  },
+    { w:380, h:380, top:'68%', left:'65%',  bg:'#e07098', o:.13, dur:8,  tx:'14px',  ty:'12px'  },
+    { w:320, h:320, top:'18%', left:'16%',  bg:'#4868e0', o:.12, dur:13, tx:'-9px',  ty:'-16px' },
+    { w:260, h:260, top:'38%', left:'40%',  bg:'#c048a8', o:.10, dur:7,  tx:'8px',   ty:'20px'  },
+  ];
+  orbDefs.forEach(o => {
+    const el = document.createElement('div');
+    el.className = 'orb';
+    el.style.cssText =
+      `width:${o.w}px;height:${o.h}px;top:${o.top};left:${o.left};` +
+      `background:${o.bg};--o:${o.o};animation-duration:${o.dur}s;` +
+      `--tx:${o.tx};--ty:${o.ty};animation-delay:${(Math.random()*4).toFixed(1)}s`;
+    a.appendChild(el);
+  });
+
+  // floating petals
+  const petalEm = ['🌸','✨','💫','⭐','🌺','💖','🌼','🦋'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalEm[Math.floor(Math.random() * petalEm.length)];
+    p.style.cssText =
+      `left:${(Math.random()*100).toFixed(1)}%;` +
+      `font-size:${(10 + Math.random()*14).toFixed(1)}px;` +
+      `animation-duration:${(12 + Math.random()*18).toFixed(1)}s;` +
+      `animation-delay:${(Math.random()*18).toFixed(1)}s`;
+    a.appendChild(p);
+  }
+
+  // countdown rings
+  const cr = document.getElementById('cdRings');
+  for (let i = 0; i < 5; i++) {
+    const r = document.createElement('div');
+    r.className = 'cd-ring';
+    const sz = 180 + i * 140;
+    r.style.cssText =
+      `width:${sz}px;height:${sz}px;` +
+      `animation-duration:${4.5 + i * 1.4}s;` +
+      `animation-delay:${i * 0.9}s`;
+    cr.appendChild(r);
+  }
+
+  // celebration falling petals
+  const celContainers = ['celPetals','celPetals2'];
+  const celEm = ['🌸','✨','🌺','💖','🎀','🌼','⭐','💐'];
+  celContainers.forEach(id => {
+    const cp = document.getElementById(id);
+    if (!cp) return;
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'cel-bg-petal';
+      p.textContent = celEm[Math.floor(Math.random() * celEm.length)];
+      p.style.cssText =
+        `left:${(Math.random()*100).toFixed(1)}%;` +
+        `font-size:${(12 + Math.random()*16).toFixed(1)}px;` +
+        `animation-duration:${(8 + Math.random()*14).toFixed(1)}s;` +
+        `animation-delay:${(Math.random()*12).toFixed(1)}s`;
+      cp.appendChild(p);
+    }
+  });
+}
+
+// ── screen switch ──
+function goTo(id, bodyClass, cb) {
+  const cur = document.querySelector('.screen.active');
+  const nxt = document.getElementById(id);
+  if (!nxt) return;
+
+  if (cur) {
+    cur.classList.add('so');
+    setTimeout(() => cur.classList.remove('active', 'so'), 380);
+  }
+  setTimeout(() => {
+    document.body.className = bodyClass || '';
+    nxt.classList.add('active', 'si');
+    nxt.scrollTop = 0;
+    setTimeout(() => nxt.classList.remove('si'), 750);
+    if (cb) setTimeout(cb, 80);
+  }, 410);
+}
+
+// ══ S1: CODE ══
+document.getElementById('unlockBtn').onclick = tryUnlock;
+document.getElementById('codeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryUnlock();
+});
+
+function tryUnlock() {
+  const val = document.getElementById('codeInput').value.trim();
+  const err = document.getElementById('errMsg');
+  if (val === SECRET_CODE) {
+    err.textContent = '';
+    spawnBurst(document.getElementById('unlockBtn'));
+    setTimeout(() => goTo('sc-cd', 'on-cd', startCountdown), 320);
+  } else {
+    err.textContent = "💔 That doesn't seem right — try again?";
+    const inp = document.getElementById('codeInput');
+    inp.classList.add('shake');
+    setTimeout(() => inp.classList.remove('shake'), 480);
+    inp.value = '';
+  }
+}
+
+// ══ S2: COUNTDOWN ══
+function startCountdown() {
+  document.getElementById('cdName').textContent = BIRTHDAY_NAME + ' 🌸';
+  const opts = { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' };
+  document.getElementById('cdDateTxt').textContent = TARGET_DATE.toLocaleString('en-IN', opts);
+
+  if (TARGET_DATE <= new Date()) {
+    goTo('sc-celebrate', 'on-celebrate', initCelebration);
+    return;
+  }
+
+  const ids = { d:'cd-d', h:'cd-h', m:'cd-m', s:'cd-s' };
+  const prev = { d:null, h:null, m:null, s:null };
+
+  function tick() {
+    const diff = TARGET_DATE - new Date();
+    if (diff <= 0) {
+      clearInterval(cdTimer);
+      goTo('sc-celebrate', 'on-celebrate', initCelebration);
+      return;
+    }
+    const vals = {
+      d: Math.floor(diff / 86400000),
+      h: Math.floor((diff % 86400000) / 3600000),
+      m: Math.floor((diff % 3600000) / 60000),
+      s: Math.floor((diff % 60000) / 1000)
+    };
+    Object.keys(vals).forEach(k => {
+      const el = document.getElementById(ids[k]);
+      el.textContent = String(vals[k]).padStart(2,'0');
+      if (prev[k] !== null && vals[k] !== prev[k]) {
+        el.classList.remove('bump');
+        void el.offsetWidth;
+        el.classList.add('bump');
+        setTimeout(() => el.classList.remove('bump'), 220);
+      }
+      prev[k] = vals[k];
+    });
+  }
+  tick();
+  cdTimer = setInterval(tick, 1000);
+}
+
+// ══ S3: CELEBRATION ══
+function initCelebration() {
+  document.getElementById('celName').textContent = BIRTHDAY_NAME + '!';
+  document.getElementById('celSubtitle').textContent = CEL_SUBTITLE;
+
+  // message with line breaks
+  const msgEl = document.getElementById('celMsg');
+  msgEl.innerHTML = FINAL_MSG
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+
+  // fill photo strip content (actual auto-scroll starts when entering Screen 4)
+  const strip = document.getElementById('celPhotos');
+  if (strip) {
+    strip.innerHTML = '';
+    PHOTOS.forEach(ph => {
+      const wrap = document.createElement('div');
+      wrap.className = 'cel-photo';
+      const img = document.createElement('img');
+      img.src = ph.src;
+      img.alt = ph.alt;
+      img.loading = 'lazy';
+      wrap.appendChild(img);
+      strip.appendChild(wrap);
+    });
+  }
+
+  // effects
+  launchConfetti(80);
+  launchFloatEmojis();
+
+  // tab title flash
+  const titles = [
+    `🎉 Happy Birthday ${BIRTHDAY_NAME}! 🎉`,
+    `✨ Today is YOUR day! ✨`,
+    `🎂 Make a wish, ${BIRTHDAY_NAME}! 🎂`,
+    `🌸 You deserve the world! 🌸`
+  ];
+  let ti = 0;
+  setInterval(() => { document.title = titles[ti = (ti + 1) % titles.length]; }, 1800);
+
+  document.getElementById('knowBtn').addEventListener('click', () => {
+    const msgEl2 = document.getElementById('celMsgSecret');
+    if (msgEl2) {
+      msgEl2.innerHTML = SECRET_MSG
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    }
+    goTo('sc-message', 'on-celebrate', () => {
+      // start auto scrolling once Screen 4 is active
+      startPhotoAutoScroll();
+    });
+  }, { once:true });
+
+  document.getElementById('exitBtn').addEventListener('click', triggerExit, { once:true });
+}
+
+// ══ EXIT ══
+function triggerExit() {
+  const ov  = document.getElementById('exitOv');
+  document.getElementById('exitTxt').textContent = EXIT_MSG;
+  ov.classList.add('on');
+  setTimeout(() => {
+    try { window.close(); } catch(e) {}
+    setTimeout(() => {
+      document.body.innerHTML = `
+        <div style="position:fixed;inset:0;background:#04010a;display:flex;flex-direction:column;
+          align-items:center;justify-content:center;gap:16px;font-family:'Dancing Script',cursive;">
+          <div style="font-size:clamp(24px,6vw,40px);color:rgba(255,200,230,.9);
+            text-align:center;padding:0 28px;line-height:1.65;">
+            ${EXIT_MSG.replace(/\n/g,'<br>')}
+          </div>
+          <div style="font-size:clamp(22px,5vw,34px);letter-spacing:10px;margin-top:6px;">
+            🌸 ✨ 🌸
+          </div>
+          <p style="font-family:Nunito,sans-serif;font-size:12px;
+            color:rgba(255,200,230,.28);margin-top:14px;">
+            You may close this tab now.
+          </p>
+        </div>`;
+    }, 700);
+  }, 2200);
+}
+
+// ── confetti ──
+function launchConfetti(n) {
+  const cols = ['#f9c6d0','#d4b8e0','#ffd5b8','#b8d8d0','#f0d070','#c9a8e0','#e8a0b4','#fde0ec'];
+  for (let i = 0; i < n; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'cf';
+      el.style.cssText =
+        `left:${(Math.random()*100).toFixed(1)}vw;` +
+        `background:${cols[Math.floor(Math.random()*cols.length)]};` +
+        `width:${(6+Math.random()*8).toFixed(1)}px;` +
+        `height:${(6+Math.random()*8).toFixed(1)}px;` +
+        `border-radius:${Math.random()>.5?'50%':'3px'};` +
+        `animation-duration:${(2.5+Math.random()*2.5).toFixed(1)}s;` +
+        `animation-delay:${(Math.random()*.6).toFixed(2)}s`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
+    }, i * 26);
+  }
+}
+
+// ── float emojis ──
+function launchFloatEmojis() {
+  const em = ['🌸','✨','🎈','💖','⭐','🎊','🎉','🌺','🦋','🎀','💐','🌟'];
+  for (let i = 0; i < 18; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'fe';
+      el.textContent = em[Math.floor(Math.random() * em.length)];
+      el.style.cssText =
+        `left:${(8+Math.random()*84).toFixed(1)}vw;` +
+        `bottom:${(3+Math.random()*22).toFixed(1)}vh;` +
+        `font-size:${(16+Math.random()*14).toFixed(1)}px;` +
+        `animation-duration:${(2+Math.random()*2.5).toFixed(1)}s`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }, i * 75);
+  }
+}
+
+// ── smooth auto-side scroll on Screen 4 (continuous loop) ──
+function startPhotoAutoScroll() {
+  const strip = document.getElementById('celPhotos');
+  if (!strip) return;
+
+  if (photosScrollTimer) {
+    clearInterval(photosScrollTimer);
+    photosScrollTimer = null;
+  }
+
+  // reset to start
+  strip.scrollLeft = 0;
+
+  photosScrollTimer = setInterval(() => {
+    if (!strip || strip.scrollWidth <= strip.clientWidth) return;
+    const max = strip.scrollWidth - strip.clientWidth;
+
+    // small step for smooth motion
+    strip.scrollLeft += 1.2;
+
+    // when we reach the end, loop back to the start
+    if (strip.scrollLeft >= max) {
+      strip.scrollLeft = 0;
+    }
+  }, 20); // runs ~50 times per second for smooth movement
+}
+
+// ── sparkle burst on element ──
+function spawnBurst(el) {
+  const rect = el.getBoundingClientRect();
+  const em   = ['✨','⭐','💫','🌟','💖','🌸'];
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.textContent = em[Math.floor(Math.random() * em.length)];
+      s.style.cssText =
+        `position:fixed;pointer-events:none;z-index:9999;font-size:${14+Math.random()*10}px;` +
+        `left:${rect.left + rect.width * Math.random()}px;` +
+        `top:${rect.top + rect.height * Math.random()}px;` +
+        `animation:spOut .85s ease forwards`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }, i * 55);
+  }
+}
+
+// ── init ──
+buildAmbient();
+document.title = '✨ Something Special Awaits ✨';
+</script>
+</body>
+</html>
