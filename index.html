@@ -511,6 +511,13 @@ body.on-celebrate{
   .code-title{font-size:20px}
   .code-card{padding:20px 28px}
 }
+
+/* mobile polaroids: hidden / behind content (desktop stays as-is) */
+@media (max-width: 700px){
+  #sc-celebrate .cel-polaroid{
+    display:none;
+  }
+}
 </style>
 </head>
 <body class="on-code">
@@ -530,7 +537,9 @@ body.on-celebrate{
     <span class="code-gem">🌸</span>
     <p class="code-eyebrow">something is waiting just for you…</p>
     <h1 class="code-title">A little surprise<br>made just for you</h1>
-    <p class="code-sub">Whisper the secret code to unlock it ✨</p>
+    <p class="code-sub">Guess the secret code to unlock it ✨</p>
+    <p class="code-eyebrow">HINT: The code is the date of birth of your, without any spaces.</p>
+    <p class="code-sub">ex: If your date of birth is the 6th August 2009, the code is <mark>06082009</mark></p>
 
 
 
@@ -582,10 +591,10 @@ body.on-celebrate{
 
   <!-- standalone tilted photos, one top-right and one bottom-left -->
   <div class="cel-polaroid cel-polaroid-top-right">
-    <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&q=80" alt="Birthday moment 1">
+    <img src="1.jpg" alt="Birthday moment 1">
   </div>
   <div class="cel-polaroid cel-polaroid-bottom-left">
-    <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&q=80" alt="Birthday moment 2">
+    <img src="2.jpg" alt="Birthday moment 2">
   </div>
 
   <div class="cel-wrap">
@@ -594,15 +603,12 @@ body.on-celebrate{
     <span class="cel-name" id="celName"></span>
     <p class="cel-subtitle" id="celSubtitle"></p>
 
-    <p class="cel-polaroid-caption">
-      Two tiny frames for a thousand little memories.
-    </p>
 
     <div class="cel-msg-card">
-      <p class="cel-msg" id="celMsg"></p>
+      <p class="cel-msg" id="celMsg">If you want to know, who is the bus girl? <br><mark>Then Only Click the button below.</mark></p>
     </div>
 
-    <button class="exit-btn" id="knowBtn">💌 Do you want to know, who is the bus girl? 💌</button>
+    <button class="exit-btn" id="knowBtn"></button>
     
   </div>
 </section>
@@ -637,7 +643,7 @@ body.on-celebrate{
 /* ╔══════════════════════════════════
    ║  ✏️  EASY EDIT ZONE
    ╚══════════════════════════════════ */
-const SECRET_CODE   = "1234";
+const SECRET_CODE   = "24032009";
 const BIRTHDAY_NAME = "Sneha";
 
 // Month is 0-indexed: Jan=0 … Dec=11
